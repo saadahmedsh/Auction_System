@@ -1,0 +1,274 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout</title>
+  <style>
+    #summary {
+      background-color: #f6f6f6;
+    }
+  </style>
+
+  <link
+    href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
+</head>
+
+<script>
+
+  const calculateCost= (response, response_2)=>{ //response_2 => products, response => order
+
+    let total=0
+    for(let i=0; i < response_2.length; i++)
+    {
+      for(let j=0; j < response.length; j++)
+      {
+        if(response_2[i]["pk"] == response[j]["fields"]["product_id"])
+        {
+          if(response[j]["fields"]["status"] == "1")
+          {
+            //total=total + parseFloat(response_2[i]["fields"]["productPrice"]) 
+            total=total+ getBidPrice(response,parseInt(response_2[i]["pk"]))
+          }
+        }
+
+      }
+    }
+    
+ 
+    return total
+
+  }
+
+
+  const getBidPrice=(response, id) =>{
+
+ 
+
+    for(let i=0; i < response.length; i++)
+    {
+     
+      if(parseInt(response[i]["fields"]["product_id"]) == id)
+      {
+        return response[i]["fields"]["bid_price"]
+      }
+
+    }
+
+
+    return 0
+
+
+  }
+
+
+
+  const checkProcessing=(res, id)=>
+  {
+    for(let i=0; i < res.length; i++){
+
+      if(res[i]["fields"]["product_id"] == id)
+      {
+        if(res[i]["fields"]["status"] == "0")
+        {
+          return "processing"
+        }
+        else
+        {
+          return "won!"
+        }
+        
+          
+      }
+     
+    }
+
+
+
+  }
+
+  let user = sessionStorage.getItem("user");
+  if (user == undefined) {
+    window.location.href = "http://localhost:8000";
+  } else {
+    let url = "http://localhost:8000/bidWinners";  //get total orders placed
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        const id = [];
+        let response = JSON.parse(xhr.responseText);
+        response=response["data"]
+     
+        for (let i = 0; i < response.length; i++) {
+          id.push(response[i]["fields"]["product_id"]);
+        }
+
+
+        //Getting products here
+
+
+       
+
+
+       let url_2 = "http://localhost:8000/returnBidProducts";
+        var xhr_2 = new XMLHttpRequest();
+
+        xhr_2.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            let response_2 = JSON.parse(xhr_2.responseText)["data"];
+
+
+    
+
+            let str=`<div class="container mx-auto mt-10">
+              <div class="flex shadow-md my-10">
+                <div class="w-3/4 bg-white px-10 py-10">
+                  <div class="flex justify-between border-b pb-8">
+                    <h1 class="font-semibold text-2xl">Shopping Cart</h1>
+                    <h2 class="font-semibold text-2xl">${response_2.length} Items</h2>
+                  </div>
+                  <div class="flex mt-10 mb-5">
+                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5">
+                      Product Details
+                    </h3>
+                    <h3
+                      class="
+                        font-semibold
+                        text-center text-gray-600 text-xs
+                        uppercase
+                        w-1/5
+                        text-center
+                      "
+                    >
+                      Bid Price
+                    </h3>
+                    <h3
+                      class="
+                        font-semibold
+                        text-center text-gray-600 text-xs
+                        uppercase
+                        w-1/5
+                        text-center
+                      "
+                    >
+                      Status
+                    </h3>
+                  </div>`
+            
+            for(let i=0; i < response_2.length; i++)
+            {
+              
+              str=str + ` <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
+                <div class="flex w-2/5">
+                  <!-- product -->
+                  <div class="w-20">
+                    <img
+                      class="h-24"
+                      src="/media/${response_2[i]["fields"]["imageURL"]}"
+                      alt=""
+                    />
+                  </div>
+                  <div class="flex flex-col justify-between ml-4 flex-grow">
+                    <span class="font-bold text-sm">${response_2[i]["fields"]["productName"]}</span>
+               
+                    <a
+                      href="#"
+                      class="font-semibold hover:text-red-500 text-gray-500 text-xs"
+                      >Remove</a
+                    >
+                  </div>
+                </div>
+      
+                <span class="text-center w-1/5 font-semibold text-sm">$${getBidPrice(response, parseInt(response_2[i]["pk"]))}</span>
+                <span class="text-center w-1/5 font-semibold text-sm">${checkProcessing(response, response_2[i]["pk"])}</span>
+              </div>`
+            }
+
+            str=str+ ` <a href="http://localhost:8000/"class="flex font-semibold text-indigo-600 text-sm mt-10">
+              <svg
+                class="fill-current mr-2 text-indigo-600 w-4"
+                viewBox="0 0 448 512"
+              >
+                <path
+                  d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z"
+                 
+                  />
+              </svg>
+              Continue Shopping
+            </a>
+          </div>
+    
+          <div id="summary" class="w-1/4 px-8 py-10">
+            <h1 class="font-semibold text-2xl border-b pb-8">Order Summary</h1>
+            <div class="flex justify-between mt-10 mb-5">
+              <span class="font-semibold text-sm uppercase">Items ${response_2.length}</span>
+              
+            </div>
+            <div>
+              <label class="font-medium inline-block mb-3 text-sm uppercase"
+                >Payment method</label
+              >
+              <select class="block p-2 text-gray-600 w-full text-sm">
+                <option>COD - Cash On Delivery</option>
+                <option>Debit Card</option>
+                <option>Credit Card</option>
+              </select>
+            </div>
+    
+            <div class="border-t mt-8">
+              <div
+                class="flex font-semibold justify-between py-6 text-sm uppercase"
+              >
+                <span>Total cost</span>
+                <span>$${calculateCost(response, response_2)}</span>
+              </div>
+              <button
+                class="
+                  bg-indigo-500
+                  font-semibold
+                  hover:bg-indigo-600
+                  py-3
+                  text-sm text-white
+                  uppercase
+                  w-full
+                "
+              >
+                  Checkout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+       `
+       document.getElementById("products").innerHTML=str
+      }
+              
+             
+           
+              
+            
+
+        };
+
+        xhr_2.open("POST", url_2, true);
+        xhr_2.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr_2.send(`products=${id}`);
+
+        
+      }
+    };
+
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(`user_id=${user}`);
+  }
+</script>
+
+<body class="bg-gray-100" id="products">
+  
+</body>

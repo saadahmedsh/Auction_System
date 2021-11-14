@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+   <style>
+
+      @media (min-width: 1024px) {
+        .lg\:h-auto {
+          height: 400;
+          height: 400px;
+        }
+      }
+
+      .object-center {
+        object-position: center;
+      }
+
+      .object-cover {
+        object-fit: scale-down;
+      }
+
+      .bid_input {
+        border: 1px solid gray;
+      }
+
+      #warning_alert {
+        display: none;
+      }
+    </style>
+    <title>Product</title>
+  </head>
+  <body>
+    <!-- Navbar starts here -->
+    <header class="text-gray-600 body-font shadow-lg sticky">
+      <div
+        class="
+          container
+          mx-auto
+          flex flex-wrap
+          p-5
+          flex-col
+          md:flex-row
+          items-center
+        "
+      >
+        <a
+          class="
+            flex
+            title-font
+            font-medium
+            items-center
+            text-gray-900
+            mb-4
+            md:mb-0
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+            ></path>
+          </svg>
+          <span class="ml-3 text-xl">Winning Auction Co.</span>
+        </a>
+        <nav
+          class="
+            md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400
+            flex flex-wrap
+            items-center
+            text-base
+            justify-center
+          "
+        ></nav>
+
+        <button
+          class="
+            inline-flex
+            items-center
+            bg-gray-100
+            border-0
+            py-1
+            px-3
+            focus:outline-none
+            hover:bg-gray-200
+            rounded
+            text-base
+            mt-4
+            md:mt-0
+          "
+          onclick="handleCart()"
+        >
+          Cart(<span id="cart_span">0</span>)
+        </button>
+      </div>
+    </header>
+
+    <!-- Navbar end here -->
+
+    <section class="text-gray-600 body-font overflow-hidden">
+      <div class="container px-5 py-24 mx-auto">
+        <div class="lg:w-4/5 mx-auto flex flex-wrap">
+          <input type="hidden" value="{{prod.productTime}}" id="productTime" />
+          <img
+            alt="ecommerce"
+            class="
+              lg:w-1/2
+              w-full
+              lg:h-auto
+              h-64
+              <!--
+              object-cover object-center
+              -->
+              rounded
+              pl
+            "
+            src="/media/{{prod.imageURL}}"
+          />
+          <div class="pr lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+            <!-- <h2 class="text-sm title-font text-gray-500 tracking-widest">BRAND NAME</h2> -->
+            <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">
+              {{prod.productName}}
+              <span
+                id="timer"
+                class="
+                  inline-flex
+                  items-center
+                  justify-center
+                  px-2
+                  py-1
+                  text-xs
+                  font-bold
+                  leading-none
+                  text-indigo-100
+                  bg-indigo-700
+                  rounded
+                "
+              ></span>
+            </h1>
+            <div class="flex mb-4">
+              <span class="flex items-center">
+                <svg
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  class="w-4 h-4 text-indigo-500"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  ></path>
+                </svg>
+                <svg
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  class="w-4 h-4 text-indigo-500"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  ></path>
+                </svg>
+                <svg
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  class="w-4 h-4 text-indigo-500"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  ></path>
+                </svg>
+                <svg
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  class="w-4 h-4 text-indigo-500"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  ></path>
+                </svg>
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  class="w-4 h-4 text-indigo-500"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600 ml-3">4 Reviews</span>
+              </span>
+              <span
+                class="
+                  flex
+                  ml-3
+                  pl-3
+                  py-2
+                  border-l-2 border-gray-200
+                  space-x-2s
+                "
+              >
+                <a class="text-gray-500">
+                  <svg
+                    fill="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    class="w-5 h-5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+                    ></path>
+                  </svg>
+                </a>
+                <a class="text-gray-500">
+                  <svg
+                    fill="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    class="w-5 h-5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"
+                    ></path>
+                  </svg>
+                </a>
+                <a class="text-gray-500">
+                  <svg
+                    fill="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    class="w-5 h-5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
+                    ></path>
+                  </svg>
+                </a>
+              </span>
+            </div>
+            <p class="leading-relaxed">{{prod.productSpecification}}</p>
+            <div
+              class="
+                flex
+                mt-6
+                items-center
+                pb-5
+                border-b-2 border-gray-100
+                mb-5
+              "
+            ></div>
+            <div class="flex">
+              <input
+                class="bid_input"
+                type="number"
+                placeholder="&nbsp;$0"
+                id="bid"
+                name="bid"
+              />
+
+              <button
+                onclick="handleBid()"
+                id="bid_button"
+                class="
+                  flex
+                  ml-auto
+                  text-white
+                  bg-indigo-500
+                  border-0
+                  py-2
+                  px-6
+                  focus:outline-none
+                  hover:bg-indigo-600
+                  rounded
+                "
+              >
+                Bid
+              </button>
+              <button
+                class="
+                  rounded-full
+                  w-10
+                  h-10
+                  bg-gray-200
+                  p-0
+                  border-0
+                  inline-flex
+                  items-center
+                  justify-center
+                  text-gray-500
+                  ml-4
+                "
+              >
+                <svg
+                  fill="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  class="w-5 h-5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prdouct details end here-->
+
+    <!-- Footer starts here -->
+
+    <footer class="text-gray-600 body-font">
+      <div class="bg-gray-100">
+        <div
+          class="
+            container
+            mx-auto
+            py-4
+            px-5
+            flex flex-wrap flex-col
+            sm:flex-row
+          "
+        >
+          <p class="text-gray-500 text-sm text-center sm:text-left">
+            © 2021 Winning Auction Co.
+            <a
+              href="https://localhost:8000"
+              rel="noopener noreferrer"
+              class="text-gray-600 ml-1"
+              target="_blank"
+            ></a>
+          </p>
+          <span
+            class="
+              inline-flex
+              sm:ml-auto sm:mt-0
+              mt-2
+              justify-center
+              sm:justify-start
+            "
+          >
+            <a class="ml-3 text-gray-500">
+              <svg
+                fill="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                class="w-5 h-5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"
+                ></path>
+              </svg>
+            </a>
+            <a class="ml-3 text-gray-500">
+              <svg
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                class="w-5 h-5"
+                viewBox="0 0 24 24"
+              >
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                <path
+                  d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"
+                ></path>
+              </svg>
+            </a>
+            <a class="ml-3 text-gray-500">
+              <svg
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="0"
+                class="w-5 h-5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="none"
+                  d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"
+                ></path>
+                <circle cx="4" cy="4" r="2" stroke="none"></circle>
+              </svg>
+            </a>
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Warning Modal -->
+
+    <div
+      id="warning_alert"
+      class="h-screen overflow-hidden flex items-center justify-center"
+      style="background: #edf2f7"
+    >
+      <div
+        class="
+          flex flex-col
+          space-y-4
+          min-w-screen
+          h-screen
+          animated
+          fadeIn
+          faster
+          fixed
+          left-0
+          top-0
+          flex
+          justify-center
+          items-center
+          inset-0
+          z-50
+          outline-none
+          focus:outline-none
+        "
+      >
+        <div
+          class="
+            flex flex-col
+            p-8
+            bg-white
+            shadow-md
+            hover:shodow-lg
+            rounded-2xl
+          "
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="
+                  w-16
+                  h-16
+                  rounded-2xl
+                  p-3
+                  border border-blue-100
+                  text-blue-400
+                  bg-blue-50
+                "
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              <div class="flex flex-col ml-3">
+                <div id="warning_text" class="font-medium leading-none">
+                  You need to login first if you wish to bid
+                </div>
+              </div>
+            </div>
+            <button
+              onclick="handleAlert()"
+              class="
+                flex-no-shrink
+                bg-red-500
+                px-5
+                ml-4
+                py-2
+                text-sm
+                shadow-sm
+                hover:shadow-lg
+                font-medium
+                tracking-wider
+                border-2 border-red-500
+                text-white
+                rounded-full
+              "
+            >
+              ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- warning modal end -->
+
+    <!-- Footer ends here -->
+
+    <script>
+      let current_product_id = -1;
+      let str = window.location.href;
+      str = str.substring(22, 23); //get the id of product
+      current_product_id = parseInt(str);
+      current_user_id = sessionStorage.getItem("user");
+
+      const endBid = () => {
+        let url = "http://localhost:8000/winner";
+        var xhr = new XMLHttpRequest();
+        document.getElementById("bid_button").disabled = true;
+        xhr.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            let response = JSON.parse(xhr.responseText);
+          }
+        };
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr.send(`product_id=${current_product_id}`);
+      };
+
+      const handleCart = () => {
+        window.location.href = "http://localhost:8000/checkout";
+      };
+
+      //localStorage.removeItem(`alert_${current_product_id}`);
+      var alert_timer = sessionStorage.getItem(`alert_${current_product_id}`);
+      var now = new Date().getTime();
+      var distance = 0;
+
+      if (alert_timer == undefined) {
+        alert_timer =
+          parseInt(document.getElementById("productTime").value) * 60000 + now;
+        sessionStorage.setItem(`alert_${current_product_id}`, alert_timer);
+      }
+
+      //timer for a product
+
+      var counter = setInterval(timer, 1000);
+
+      function timer() {
+        now = new Date().getTime();
+        distance = alert_timer - now;
+
+        //console.log(alert_timer, distance)
+
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("timer").innerHTML =
+          hours + ":" + minutes + ":" + seconds;
+
+        if (distance < 0) {
+          clearInterval(counter);
+          document.getElementById("timer").innerHTML = "EXPIRED";
+          endBid();
+        }
+      }
+
+      //timer end
+
+      let cart = sessionStorage.getItem(`cart${current_user_id}`);
+      if (cart != undefined) {
+        document.getElementById("cart_span").innerHTML = cart;
+      }
+
+      function handleBid() {
+        let user_id = sessionStorage.getItem("user");
+        let url = "http://localhost:8000/checkUser";
+
+        if (user_id != undefined) {
+          var xhttp = new XMLHttpRequest();
+
+          xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+              let response = JSON.parse(xhttp.responseText);
+              if (response["allowed"] == "true") {
+                let user = parseInt(user_id);
+                var xhr = new XMLHttpRequest();
+                let url_2 = "http://localhost:8000/addOrder";
+                let price = document.getElementById("bid").value;
+                if (price == "") {
+                  price = 0;
+                }
+
+                xhr.onreadystatechange = function () {
+                  if (this.readyState == 4 && this.status == 200) {
+                    let response_2 = JSON.parse(xhr.responseText);
+                    if (response_2["exists"] == "true") {
+                      document.getElementById("warning_text").innerHTML =
+                        "Your bid price updated!";
+                      document.getElementById("warning_alert").style.display =
+                        "block";
+                    }
+
+                    if (response_2["exists"] == "false") {
+                      cart = parseInt(
+                        document.getElementById("cart_span").innerHTML
+                      );
+                      cart = cart + 1;
+                      document.getElementById("cart_span").innerHTML = cart;
+                      sessionStorage.setItem(`cart${current_user_id}`, cart);
+                      document.getElementById("warning_text").innerHTML =
+                        "Bid placed!";
+                      document.getElementById("warning_alert").style.display =
+                        "block";
+                    }
+                  }
+                };
+
+                xhr.open("POST", url_2, true);
+                xhr.setRequestHeader(
+                  "Content-type",
+                  "application/x-www-form-urlencoded"
+                );
+                xhr.send(
+                  `user_id=${user}&product_id=${current_product_id}&price=${price}`
+                );
+              }
+
+              if (response["allowed"] == "false") {
+                document.getElementById("warning_text").innerHTML =
+                  "Your are not authorized by admin!";
+                document.getElementById("warning_alert").style.display =
+                  "block";
+              }
+            }
+          };
+          xhttp.open("POST", url, true);
+          xhttp.setRequestHeader(
+            "Content-type",
+            "application/x-www-form-urlencoded"
+          );
+          xhttp.send(`user_id=${parseInt(user_id)}`);
+        } else {
+          document.getElementById("warning_text").innerHTML =
+            "You need to login first!";
+          document.getElementById("warning_alert").style.display = "block";
+        }
+      }
+
+      const handleAlert = () => {
+        document.getElementById("warning_alert").style.display = "none";
+      };
+    </script>
+  </body>
+</html>

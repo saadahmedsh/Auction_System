@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"
+    href="//unpkg.com/tailwindcss@^2/dist/tailwind.min.css"">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Admin View</title>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Lato", sans-serif;
+      }
+
+      .object-center {
+        /* object-position: center; */
+        object-fit: scale-down;
+    }
+
+      .sidebar {
+        margin: 0;
+        padding: 0;
+        width: 200px;
+        background-color: #f1f1f1;
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+      }
+
+      .sidebar a {
+        display: block;
+        color: black;
+        padding: 16px;
+        text-decoration: none;
+      }
+
+      .sidebar a.active {
+        background-color: blue;
+        color: white;
+      }
+
+      .prod_container {
+        cursor: pointer;
+      }
+
+      .sidebar a:hover:not(.active) {
+        background-color: blue;
+        color: white;
+      }
+
+      div.content {
+        margin-left: 200px;
+        padding: 1px 16px;
+        height: 1000px;
+      }
+
+      @media screen and (max-width: 700px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .sidebar a {
+          float: left;
+        }
+        div.content {
+          margin-left: 0;
+          height: auto;
+        }
+      }
+
+      #product_image {
+        margin-left: 10px;
+        margin-top: 10px;
+      }
+
+      @media screen and (max-width: 400px) {
+        .sidebar a {
+          text-align: center;
+          float: none;
+        }
+      }
+
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+      }
+
+      /* Modal Content */
+      .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 35%;
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        margin-right: -10px;
+        margin-top: -22px;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .addItem {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        flex-direction: row-reverse;
+      }
+    </style>
+
+   
+  </head>
+  <body>
+
+
+    <script>
+        let response=" ";
+
+        const adminState = sessionStorage.getItem("adminAuthenticated");
+
+        if (adminState != "true") {
+          window.location.href = "http://localhost:8000/panel";
+        }
+        url = "http://localhost:8000/getUsers";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            response = JSON.parse(xhttp.responseText);
+            let content = document.getElementById("total_users");
+            let str = "";
+            let status= " ";
+            let icon = " ";
+            let msg=" ";
+
+
+        
+
+
+           
+
+            for (let i = 0; i < response.length; i++) {
+
+              id=response[i]["pk"]
+
+
+                if (response[i]["fields"]["status"] == "0")
+                {
+                    status="accept"
+                    msg="unregistered"
+                   
+                }
+                else
+                {
+                    status="remove"
+                    msg="registered"
+                  
+                }
+             
+
+              str =
+                
+         
+              str + ` <div
+              class="
+                mt-2
+                flex
+                px-4
+                py-4
+                justify-between
+                bg-white
+                dark:bg-gray-600
+                shadow-xl
+                rounded-lg
+                cursor-pointer
+              "
+              
+            >
+              <div class="flex justify-between">
+                <img
+                  class="h-12 w-12 rounded-full object-cover"
+                  src="http://via.placeholder.com/640x360"
+                  alt=""
+                />
+  
+                <div
+                  class="
+                    ml-4
+                    flex flex-col
+                    capitalize
+                    text-gray-600
+                    dark:text-gray-400
+                  "
+                >
+                  <span onclick=updateUser(id)
+                  id=${id} class="mt-2 text-black dark:text-gray-200">
+                    ${response[i]["fields"]["email"]}
+                  </span>
+                </div>
+              </div>
+  
+              <div class="flex">
+                <div
+                  class="
+                    mr-16
+                    flex flex-col
+                    capitalize
+                    text-gray-600
+                    dark:text-gray-400
+                  "
+                >
+                  <span class="mt-2 text-black dark:text-gray-200"> ${msg} </span>
+                </div>
+  
+                <div
+                  class="
+                    mr-8
+                    flex flex-col
+                    capitalize
+                    text-gray-600
+                    dark:text-gray-400
+                  "
+                >
+                  <button
+                  id=${id}
+
+                  onclick=handleUser(id)
+                    class="
+                      bg-gray-300
+                      hover:bg-gray-400
+                      text-gray-800
+                      font-bold
+                      py-2
+                      px-4
+                      rounded
+                      inline-flex
+                      items-center
+                    "
+                  >
+                   
+                    <span>${status}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+             `;
+
+
+             
+            }
+
+
+
+            content.innerHTML=str
+
+            
+          }
+        };
+
+        xhttp.open("GET", url, true);
+        xhttp.setRequestHeader("Content-type", "json");
+        xhttp.send();
+    </script>
+  
+    <div class="sidebar">
+      <a href="/products">Products</a>
+      <a href="/Users" class="active">Users</a>
+      <a href="#contact">Contact</a>
+      <a href="#" onclick=handleLogout()>Logout</a>
+    </div>
+
+    <div class="content">
+
+      <div class="container px-5 py-24 mx-auto">
+
+
+        <div class="flex flex-wrap w-full mb-20">
+            <div class="lg:w-1/2 w-full mb-6 lg:mb-0">
+              <h1
+                class="
+                  sm:text-3xl
+                  text-2xl
+                  font-medium
+                  title-font
+                  mb-2
+                  text-gray-900
+                "
+              >
+                Winning Auction Co.
+              </h1>
+              <div class="h-1 w-20 bg-indigo-500 rounded"></div>
+            </div>
+        </div>
+
+
+          
+      <div class="h-screen w-full flex overflow-hidden">
+        <main
+          class="
+            flex-1 flex flex-col
+            bg-gray-100
+            dark:bg-gray-700
+            transition
+            duration-500
+            ease-in-out
+            overflow-y-auto
+          "
+        >
+          <div class="mx-10 my-2" id="total_users">
+          
+
+      
+          </div>
+        </main>
+      </div>
+
+
+      
+      
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+
+          <form class="w-full max-w-sm">
+            <div class="flex items-center border-b border-teal-500 py-2">
+              <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Name" id="fullname" aria-label="Full name">
+            </div>
+            <div class="flex items-center border-b border-teal-500 py-2">
+              <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="email" placeholder="Email" id="email" aria-label="Full name">
+            </div>
+            <div class="flex items-center border-b border-teal-500 py-2">
+              <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="password" placeholder="Password" id="password" aria-label="Full name">
+            </div>
+            <div class="flex items-center border-b border-teal-500 py-2">
+              <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="CNIC" id="cnic" aria-label="Full name">
+            </div>
+            <div class="flex items-center border-b border-teal-500 py-2">
+              <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Phone #" id="phone_number" aria-label="Full name">
+            </div>
+          </form>
+
+          <button onclick=updateInfo() class="bg-blue-500 mt-8 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+            Update
+          </button>
+        </div>
+          
+          
+
+      </div>
+        
+      
+
+
+      
+
+         
+    </div>
+
+
+    <script>
+
+      var modal = document.getElementById("myModal");
+      let current_id=0
+    
+
+
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+
+
+      const updateInfo= () =>
+      {
+        let url="http://localhost:8000/updateUser"
+        let email = document.getElementById("email");
+        let password = document.getElementById("password");
+        let fullname = document.getElementById("fullname");
+        let cnic = document.getElementById("cnic");
+        let number = document.getElementById("phone_number");
+        
+
+
+        var _email = email.value;
+        var _password = password.value;
+        var _fullname = fullname.value;
+        var _cnic=cnic.value
+        var _number=number.value
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            let _response = JSON.parse(xhttp.responseText);
+
+            if (_response["update"] === "true") {
+              window.location.href = "http://localhost:8000/Users";
+            }
+          }
+
+       
+        };
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xhttp.send(
+          `email=${_email}&password=${_password}&fullname=${_fullname}&cnic=${_cnic}&number=${_number}&id=${current_id}`
+        );
+
+        
+      }
+
+
+      const updateUser= (id) =>
+      {
+        let data=' '
+        current_id=id
+        for(let i=0; i < response.length; i++)
+        {
+          if(response[i]["pk"] == id){
+            data=response[i]["fields"]
+            break
+          }
+        }
+
+        if( data != ' ')
+        {
+          document.getElementById("fullname").value=data["full_name"]
+          document.getElementById("email").value=data["email"]
+          document.getElementById("password").value=data["password"]
+          document.getElementById("cnic").value=data["cnic"]
+          document.getElementById("phone_number").value=data["number"]
+        }
+
+        modal.style.display="block"
+
+      }
+      function handleUser(id)
+      {
+
+        modal.style.display="none"
+        url = "http://localhost:8000/editUser";
+    
+     
+        var xhttp = new XMLHttpRequest();
+      
+
+       
+
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            let _response=JSON.parse(xhttp.responseText)
+
+            if(_response['update'] === "ok"){
+              window.location.href = "http://localhost:8000/Users"
+          
+            }
+         
+          
+          }
+
+        };
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xhttp.send(`user_id=${id}`);
+      }
+      
+
+
+      const handleLogout=() =>{
+        sessionStorage.setItem("adminAuthenticated", "false")
+        window.location.href="http://localhost:8000/panel"
+
+      }
+    </script>
+
+    
+  </body>
+</html>
